@@ -2,7 +2,7 @@
 
 import { Button, Card, Empty, Flex, Grid, Popconfirm, Space, Table } from "antd";
 import type { TableColumnsType } from "antd";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import {
   compareTableRowsByDate,
@@ -13,19 +13,11 @@ import {
 import type { TableRow, TableRowSubmitValues } from "@/entities/table-row";
 import { TableRowModal, useManageTableRow } from "@/features/manage-table-row";
 import { filterRows, TableSearchInput, useTableSearch } from "@/features/table-search";
+import { useHasMounted } from "@/shared/hooks";
 
 export const EditableTable = () => {
   const screens = Grid.useBreakpoint();
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => {
-    const frameId = requestAnimationFrame(() => {
-      setHasMounted(true);
-    });
-
-    return () => {
-      cancelAnimationFrame(frameId);
-    };
-  }, []);
+  const hasMounted = useHasMounted();
   // На SSR фиксируем "desktop" поведение, чтобы избежать структурного layout shift.
   const isMobile = hasMounted ? !screens.md : false;
   const [rows, setRows] = useState<TableRow[]>([]);
@@ -77,27 +69,32 @@ export const EditableTable = () => {
   const columns: TableColumnsType<TableRow> = useMemo(
     () => [
       {
-        title: "Имя",
+        title: <span className="editableTable__columnTitle">Имя</span>,
         dataIndex: "name",
         key: "name",
         sorter: compareTableRowsByName,
       },
       {
-        title: "Дата",
+        title: <span className="editableTable__columnTitle">Дата</span>,
         dataIndex: "date",
         key: "date",
+        align: "center",
         render: (value: TableRow["date"]) => formatTableRowDate(value),
         sorter: compareTableRowsByDate,
       },
       {
-        title: "Числовое значение",
+        title: (
+          <span className="editableTable__columnTitle">Числовое значение</span>
+        ),
         dataIndex: "value",
         key: "value",
+        align: "center",
         sorter: compareTableRowsByValue,
       },
       {
-        title: "Действия",
+        title: <span className="editableTable__columnTitle">Действия</span>,
         key: "actions",
+        align: "center",
         render: (_, row) => (
           <Space orientation={isMobile ? "vertical" : "horizontal"} size={8}>
             <Button
@@ -150,6 +147,7 @@ export const EditableTable = () => {
           rowKey="id"
           dataSource={dataSource}
           columns={columns}
+          className="editableTable__table"
           bordered
           size={isMobile ? "small" : "middle"}
           scroll={isMobile ? { x: 720 } : undefined}

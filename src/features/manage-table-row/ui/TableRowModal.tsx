@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, Grid, Input, InputNumber, Modal } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ChangeEvent } from "react";
 
 import {
@@ -14,6 +14,7 @@ import type {
   TableRowFormValues,
   TableRowSubmitValues,
 } from "@/entities/table-row";
+import { useHasMounted } from "@/shared/hooks";
 
 type TableRowModalProps = {
   mode: "add" | "edit";
@@ -37,16 +38,7 @@ export const TableRowModal = ({
   onSubmit,
 }: TableRowModalProps) => {
   const screens = Grid.useBreakpoint();
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => {
-    const frameId = requestAnimationFrame(() => {
-      setHasMounted(true);
-    });
-
-    return () => {
-      cancelAnimationFrame(frameId);
-    };
-  }, []);
+  const hasMounted = useHasMounted();
   // На SSR фиксируем "desktop" поведение, чтобы избежать структурного layout shift.
   const isMobile = hasMounted ? !screens.sm : false;
   const [values, setValues] = useState<TableRowFormValues>(getInitialValues(row));
@@ -73,10 +65,14 @@ export const TableRowModal = ({
       return;
     }
 
+    if (values.value === null) {
+      return;
+    }
+
     onSubmit({
       name: values.name.trim(),
       date: toIsoDateFromInput(values.date),
-      value: values.value as number,
+      value: values.value,
     });
   };
 
@@ -90,21 +86,31 @@ export const TableRowModal = ({
       cancelText="Отмена"
       width={isMobile ? "calc(100vw - 24px)" : 520}
       destroyOnHidden
+      className="tableRowModal"
     >
-      <Form layout="vertical">
+      <Form layout="vertical" className="tableRowModal__form">
         <Form.Item
           label="Имя"
           validateStatus={isSubmitAttempted && errors.name ? "error" : ""}
           help={isSubmitAttempted ? errors.name : undefined}
         >
-          <Input value={values.name} onChange={handleChangeName} />
+          <Input
+            className="tableRowModal__input"
+            value={values.name}
+            onChange={handleChangeName}
+          />
         </Form.Item>
         <Form.Item
           label="Дата"
           validateStatus={isSubmitAttempted && errors.date ? "error" : ""}
           help={isSubmitAttempted ? errors.date : undefined}
         >
-          <Input type="date" value={values.date} onChange={handleChangeDate} />
+          <Input
+            className="tableRowModal__input"
+            type="date"
+            value={values.date}
+            onChange={handleChangeDate}
+          />
         </Form.Item>
         <Form.Item
           label="Числовое значение"
@@ -113,6 +119,7 @@ export const TableRowModal = ({
         >
           <InputNumber
             style={{ width: "100%" }}
+            className="tableRowModal__inputNumber"
             value={values.value}
             onChange={handleChangeValue}
           />

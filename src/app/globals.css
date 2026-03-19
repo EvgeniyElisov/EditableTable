@@ -1,12 +1,24 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f8fb;
+  --foreground: #0f172a;
+  --app-bg-start: #dde3e8;
+  --app-bg-end: #f7fafc;
+  --surface-border: rgba(15, 23, 42, 0.08);
+  --muted-text: rgba(15, 23, 42, 0.6);
+  --shadow-md: 0 10px 30px rgba(17, 24, 39, 0.08);
+  --focus-ring: rgba(22, 119, 255, 0.35);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0b1220;
+    --foreground: #e5e7eb;
+    --app-bg-start: #0b1220;
+    --app-bg-end: #111827;
+    --surface-border: rgba(229, 231, 235, 0.14);
+    --muted-text: rgba(229, 231, 235, 0.65);
+    --shadow-md: 0 16px 50px rgba(0, 0, 0, 0.55);
+    --focus-ring: rgba(64, 150, 255, 0.35);
   }
 }
 
@@ -44,15 +56,103 @@ a {
 
 .pageCenter {
   min-height: 100vh;
-  padding: 24px;
+  padding: clamp(16px, 3vw, 24px);
+  background: linear-gradient(135deg, var(--app-bg-start), var(--app-bg-end));
 }
 
 .tableCard {
   width: min(1000px, 100%);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--surface-border);
+  background-clip: padding-box;
+}
+
+html {
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+
+  .pageCenter {
+    background: linear-gradient(135deg, var(--app-bg-start), var(--app-bg-end));
+  }
 }
+
+.editableTable__columnTitle {
+  display: block;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.editableTable__table {
+  border-radius: 12px;
+}
+
+.editableTable__table .ant-table-container {
+  border-radius: 12px;
+}
+
+.editableTable__table .ant-table-thead > tr > th {
+  border-bottom: 1px solid var(--surface-border) !important;
+}
+
+.editableTable__table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--surface-border) !important;
+}
+
+.editableTable__table .ant-table-row {
+  transition: background-color 150ms ease;
+}
+
+.editableTable__search .ant-input {
+  border-radius: 12px;
+}
+
+.tableRowModal .ant-modal-content {
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--surface-border);
+  background-clip: padding-box;
+}
+
+.tableRowModal .ant-modal-header {
+  border-radius: 16px 16px 0 0;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.tableRowModal .ant-modal-title {
+  font-weight: 700;
+}
+
+.tableRowModal .ant-modal-footer {
+  border-top: 1px solid var(--surface-border);
+}
+
+.tableRowModal .ant-form-item-label > label {
+  color: var(--muted-text);
+  font-weight: 600;
+}
+
+.tableRowModal .ant-input {
+  border-radius: 12px;
+}
+
+.tableRowModal .ant-input-number-input {
+  border-radius: 12px;
+}
+
+.tableRowModal .ant-input:focus,
+.tableRowModal .ant-input-number-focused .ant-input-number-input {
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.ant-popover-inner {
+  border-radius: 12px;
+  border: 1px solid var(--surface-border);
+}
+

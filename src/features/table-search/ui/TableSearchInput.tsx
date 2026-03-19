@@ -15,6 +15,7 @@ export const TableSearchInput = ({
   onClear,
 }: TableSearchInputProps) => (
   <Input
+    className="editableTable__search"
     allowClear
     value={value}
     onChange={onChange}
