@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "antd/dist/reset.css";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { AntdProvider } from "./providers/AntdProvider";
 import "./globals.css";
 
@@ -27,7 +28,9 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <AntdProvider>{children}</AntdProvider>
+        <AntdRegistry>
+          <AntdProvider>{children}</AntdProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

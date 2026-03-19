@@ -2,7 +2,7 @@
 
 import { Button, Card, Empty, Flex, Grid, Popconfirm, Space, Table } from "antd";
 import type { TableColumnsType } from "antd";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   compareTableRowsByDate,
@@ -16,7 +16,18 @@ import { filterRows, TableSearchInput, useTableSearch } from "@/features/table-s
 
 export const EditableTable = () => {
   const screens = Grid.useBreakpoint();
-  const isMobile = !screens.md;
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => {
+      setHasMounted(true);
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, []);
+  // На SSR фиксируем "desktop" поведение, чтобы избежать структурного layout shift.
+  const isMobile = hasMounted ? !screens.md : false;
   const [rows, setRows] = useState<TableRow[]>([]);
   const { searchValue, handleSearchChange, handleResetSearch } = useTableSearch();
 
@@ -88,7 +99,7 @@ export const EditableTable = () => {
         title: "Действия",
         key: "actions",
         render: (_, row) => (
-          <Space direction={isMobile ? "vertical" : "horizontal"} size={8}>
+          <Space orientation={isMobile ? "vertical" : "horizontal"} size={8}>
             <Button
               size={isMobile ? "small" : "middle"}
               aria-label={`Редактировать строку ${row.name}`}
@@ -118,7 +129,7 @@ export const EditableTable = () => {
   );
 
   return (
-    <Card className="tableCard" size={isMobile ? "small" : "default"}>
+    <Card className="tableCard" size={isMobile ? "small" : "medium"}>
       <Flex vertical gap={isMobile ? 12 : 16}>
         <Flex justify="flex-start">
           <Button

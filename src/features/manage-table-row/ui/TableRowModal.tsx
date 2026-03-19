@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, Grid, Input, InputNumber, Modal } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ChangeEvent } from "react";
 
 import {
@@ -37,7 +37,18 @@ export const TableRowModal = ({
   onSubmit,
 }: TableRowModalProps) => {
   const screens = Grid.useBreakpoint();
-  const isMobile = !screens.sm;
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => {
+      setHasMounted(true);
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, []);
+  // На SSR фиксируем "desktop" поведение, чтобы избежать структурного layout shift.
+  const isMobile = hasMounted ? !screens.sm : false;
   const [values, setValues] = useState<TableRowFormValues>(getInitialValues(row));
   const [isSubmitAttempted, setIsSubmitAttempted] = useState(false);
 
