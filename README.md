@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Editable Table
 
-## Getting Started
+Интерактивная таблица с CRUD, поиском и сортировкой на `Next.js + TypeScript + Ant Design`.
 
-First, run the development server:
+## Что реализовано
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Таблица с колонками:
+  - `Имя`
+  - `Дата`
+  - `Числовое значение`
+  - `Действия`
+- Добавление строки через модальное окно.
+- Редактирование строки через модальное окно с предзаполнением.
+- Удаление строки из таблицы (с подтверждением).
+- Валидация полей формы:
+  - `name` — обязательно, не только пробелы
+  - `date` — обязательно, корректная дата
+  - `value` — обязательно, число
+- Поиск по всем ячейкам (`name`, `date`, `value`), без учета регистра.
+- Сортировка всех колонок по типам данных:
+  - имя — строковая locale-aware
+  - дата — по timestamp
+  - число — числовая
+- Корректная совместная работа поиска и сортировки.
+- FSD-структура (`entities`, `features`, `widgets`) и публичные API через `index.ts`.
+- Централизованная тема Ant Design через `ConfigProvider`.
+- Адаптив под мобильные устройства на базе `Ant Design Grid.useBreakpoint`:
+  - компактные размеры компонентов на мобильных;
+  - вертикальные action-кнопки в колонке `Действия`;
+  - горизонтальный скролл таблицы на узких экранах;
+  - адаптивная ширина модального окна.
+
+## Стек
+
+- `Next.js` (App Router)
+- `React`
+- `TypeScript`
+- `Ant Design`
+- `ESLint`
+- `pnpm`
+
+## Архитектура (FSD)
+
+```text
+src/
+  app/
+    layout.tsx
+    page.tsx
+    providers/
+      AntdProvider.tsx
+  widgets/
+    EditableTable/
+      ui/
+        EditableTable.tsx
+      index.ts
+  features/
+    manage-table-row/
+      ui/
+        TableRowModal.tsx
+      model/
+        use-manage-table-row.ts
+      index.ts
+    table-search/
+      ui/
+        TableSearchInput.tsx
+      model/
+        use-table-search.ts
+      lib/
+        filter-rows.ts
+      index.ts
+  entities/
+    table-row/
+      model/
+        types.ts
+        validation.ts
+      lib/
+        comparators.ts
+        formatters.ts
+      index.ts
+  shared/
+    lib/
+      date/
+      number/
+      string/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Запуск проекта
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Приложение будет доступно по адресу: `http://localhost:3000`.
 
-## Learn More
+## Проверка качества
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm lint
+pnpm build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Сценарии для ручной проверки
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Добавление новой строки.
+- Редактирование существующей строки.
+- Удаление строки.
+- Поиск по имени, дате и числовому значению.
+- Сортировка по каждой колонке (`asc/desc`).
+- Совместная работа поиска и сортировки.
 
-## Deploy on Vercel
+## Документация
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Компоненты Ant Design и их назначение:
+  - `docs/antd-components.md`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Деплой
+
+- Production URL: `ADD_YOUR_DEPLOY_URL_HERE`
