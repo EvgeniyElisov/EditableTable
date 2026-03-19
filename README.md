@@ -116,4 +116,4 @@ pnpm build
 
 ## Деплой
 
-- Production URL: `ADD_YOUR_DEPLOY_URL_HERE`
+- Production URL: `https://evgeniyelisov.github.io/EditableTable/`
